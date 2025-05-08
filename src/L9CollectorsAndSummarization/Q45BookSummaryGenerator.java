@@ -1,79 +1,43 @@
 package L9CollectorsAndSummarization;
-import java.util.List;
 
-class Book {
+import java.awt.print.Book;
+import java.util.*;
+import java.util.stream.Collectors;
+class Book1 {
     private String title;
-    private double rating;  // Rating between 0 and 5
-    private double price;   // Price in dollars
+    private double rating;
+    private double price;
 
-    public Book(String title, double rating, double price) {
+    // Constructor, Getters, Setters
+    public Book1(String title, double rating, double price) {
         this.title = title;
         this.rating = rating;
         this.price = price;
     }
 
-    public double getRating() {
-        return rating;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-}
-
-class BookSummary {
-    private int totalCount;
-    private double averageRating;
-    private double totalPrice;
-
-    public BookSummary(int totalCount, double averageRating, double totalPrice) {
-        this.totalCount = totalCount;
-        this.averageRating = averageRating;
-        this.totalPrice = totalPrice;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Summary: Total Books = %d, Average Rating = %.2f, Total Price = %.2f",
-                totalCount, averageRating, totalPrice);
-    }
+    public double getRating() { return rating; }
+    public double getPrice() { return price; }
 }
 
 public class Q45BookSummaryGenerator {
-
-    // Method to generate the summary
-    public static BookSummary generateSummary(List<Book> books) {
-        if (books == null || books.isEmpty()) {
-            return new BookSummary(0, 0.0, 0.0);
-        }
-
-        int totalCount = books.size();
-        double totalRating = 0.0;
-        double totalPrice = 0.0;
-
-        for (Book book : books) {
-            totalRating += book.getRating();
-            totalPrice += book.getPrice();
-        }
-
-        double averageRating = totalRating / totalCount;
-
-        return new BookSummary(totalCount, averageRating, totalPrice);
-    }
-
     public static void main(String[] args) {
-        // Example books
-        List<Book> books = List.of(
-                new Book("The Great Gatsby", 4.5, 10.99),
-                new Book("Moby Dick", 3.8, 12.50),
-                new Book("1984", 4.8, 8.99),
-                new Book("To Kill a Mockingbird", 4.7, 15.99)
+        List<Book1> books = Arrays.asList(
+                new Book1("Book A", 4.5, 299.0),
+                new Book1("Book B", 3.8, 199.0),
+                new Book1("Book C", 4.9, 399.0)
         );
 
-        // Generate the summary
-        BookSummary summary = generateSummary(books);
+        // Summarize rating
+        DoubleSummaryStatistics ratingStats = books.stream()
+                .collect(Collectors.summarizingDouble(Book1::getRating));
 
-        // Output the summary
-        System.out.println(summary);
+        // Summarize price
+        DoubleSummaryStatistics priceStats = books.stream()
+                .collect(Collectors.summarizingDouble(Book1::getPrice));
+
+        // Output summary
+        System.out.println("Total Books: " + ratingStats.getCount());
+        System.out.println("Average Rating: " + ratingStats.getAverage());
+        System.out.println("Total Price: " + priceStats.getSum());
     }
 }
